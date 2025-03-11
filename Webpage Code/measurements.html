@@ -1,0 +1,900 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Scanning Tool</title>
+    
+    <!-- Link to the favicon (ratchet icon in PNG format) -->
+<link rel="icon" href="C:\Users\simos\Documents\ΣΧΟΛΗ\Εκπόνηση Διπλωματικής Εργασίας\Application\scanner.png" type="image/png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: 
+        linear-gradient(
+            rgba(0, 0, 0, 0.30),  /* 30% black tint (opacity 0.30) */
+            rgba(0, 0, 0, 0.30)
+        ),
+        url('https://images.pexels.com/photos/4488660/pexels-photo-4488660.jpeg');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+        }
+
+
+        .header h1 {
+            text-align: center;
+        }
+        .header h1 {
+    font-size: 2.5em;
+    color: #fff; /* White text */
+    text-shadow: 0 0 10px #fff, 0 0 20px #1167b1, 0 0 30px #1167b1, 0 0 40px #1167b1, 0 0 50px #1167b1, 0 0 75px #1167b1; /* Glowing blue effect */
+          }
+       
+
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        button {
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    border: none; /* Remove default border */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+#connectButton {
+    background-color: forestgreen;
+    color: white;
+}
+
+#terminateButton {
+    background-color: #ffcccc;
+    color: black;
+}
+
+
+
+/*logo container*/
+.image-container {
+    text-align: left;
+    margin-top: 10px;
+     flex: 0; /* Prevent the image container from stretching */
+}
+
+.resized-image {
+    width: 20%; /* Reduce size to 20% of the container width */
+    height: auto; /* Maintains aspect ratio */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a soft shadow */
+    border-radius: 8px; /* Rounds the corners */
+    transition: transform 0.3s ease; /* Adds smooth hover effect */
+}
+
+.resized-image:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+
+/* Hover Effects */
+button:hover {
+    transform: scale(1.1); /* Slight zoom effect */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+}
+
+/* Specific hover effect for each button */
+#connectButton:hover {
+    background-color: #28a745; /* Slightly lighter green on hover */
+}
+
+#terminateButton:hover {
+    background-color: #ff6666; /* Slightly darker red on hover */
+}
+
+/* Focus state to highlight the button */
+button:focus {
+    outline: none; /* Remove default outline */
+    border: 2px solid #007BFF; /* Add custom blue border */
+}
+
+/* Active button state when clicked */
+button:active {
+    transform: scale(0.98); /* Slight shrink effect when clicked */
+}
+
+         #output {
+            height: 300px;
+            overflow: auto;
+            background-color: black;
+            color: white;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1em;  /* Smaller font size */
+            white-space: pre-wrap;
+            border-radius: 10px;
+            margin-top: 20px;
+            position: relative;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Typing animation */
+        #output::after {
+            content: '|'; /* The cursor */
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            animation: blink 1s step-end infinite;
+        }
+        /* Animation for terminal text */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Blinking cursor effect */
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /*command input with effects*/
+        #commandInput {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            margin-top: 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+        }
+        .refresh-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #007bff;
+            font-size: 1.5em;
+        }
+
+          /* Info icon styles */
+        .info-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        /* Popup styles */
+        .info-popup {
+            display: none;
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 200px;
+        }
+
+        .info-icon:hover + .info-popup,
+        .info-popup:hover {
+            display: block;
+        }
+
+        /* PDF Icon and Viewer styles */
+        .pdf-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 2em;
+            color: #AA0000;
+            cursor: pointer;
+        }
+        .pdf-viewer {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 60%;
+            height: 100%;
+            background-color: white;
+            z-index: 1000;
+            padding: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+        .pdf-viewer iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        /*Copyright Section*/
+          .footer {
+                position: fixed;
+                bottom: 10px;
+                left: 10px;
+                color: white;
+                font-size: 1em;
+                font-weight: bold;
+            }
+
+            .icon {
+            isplay: inline-block;
+            fontd-size: 1.5em; /* Adjust icon size as needed */
+                }
+
+            .name {
+                display: none; /* Initially hide the name */
+                margin-left: 5px;
+            }
+
+            .footer:hover .name {
+                display: inline-block; /* Show the name on hover */
+            }
+
+
+           .hardware-section {
+    width: 56%; /* Reduced to 80% of 70% */
+    max-width: 640px; /* Maximum width reduced by 20% */
+    margin: 24px auto; /* Reduced margin */
+    padding: 24px; /* Reduced padding */
+    background-color: #f9f9f9; /* Lighter background for a fresh look */
+    border-radius: 10px; /* Slightly smaller rounded corners */
+    box-shadow: 0 3.2px 9.6px rgba(0, 0, 0, 0.1); /* Soft shadow for a lifted effect */
+    transition: transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.hardware-section:hover {
+    transform: scale(1.02); /* Subtle zoom effect on hover */
+}
+
+.hardware-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 16px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hardware-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hardware-item img {
+    width: 70px; /* Reduced image width */
+    height: auto;
+    border-radius: 4px; /* Slightly smaller border-radius */
+    margin-right: 18px; /* Reduced space between image and text */
+    transition: transform 0.3s ease;
+}
+
+.hardware-item img:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.hardware-item h3 {
+    font-size: 0.980em; /* Reduced font size by 10% from 1.04em */
+    font-weight: bold;
+    color: #333; /* Darker text for titles */
+    margin-bottom: 10px; /* Retained bottom margin */
+}
+
+
+.hardware-item p {
+    font-size: 0.6em; /* Reduced font size */
+    color: #555;
+    margin-bottom: 8.4px; /* Increased margin by 5% (8px * 1.05) */
+}
+
+.hardware-item a {
+    font-size: 0.8em; /* Reduced font size */
+    color: #007BFF;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+
+.hardware-item a:hover {
+    color: #0056b3; /* Darker shade on hover */
+    text-decoration: underline;
+}
+
+/* Manual Icon styling (positioned at the top-left corner) */
+.manual-icon {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    cursor: pointer;
+    width: 70px; /* Slightly smaller width */
+    height: 70px; /* Slightly smaller height */
+}
+
+/* Ensure the icon image takes up the entire width and height of the div */
+.manual-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Manual Popup styling */
+.manual-popup {
+    display: none;
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    background-color: #fff;
+    padding: 12px; /* Reduced padding for a more compact design */
+    border-radius: 8px; /* Slightly smaller radius */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 260px; /* Reduced width */
+    color: #333;
+    font-size: 0.9em;
+    z-index: 9;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Title styling for the instructions */
+.manual-popup h4 {
+    font-size: 1.1em; /* Reduced font size */
+    margin-top: -8px; /* Move the title slightly higher */
+    margin-bottom: 8px; /* Reduced space below title */
+    color: #007bff; /* Base color */
+    font-weight: bold; /* Bold title */
+    text-align: center; /* Center-align the title */
+    text-transform: uppercase; /* Uppercase for emphasis */
+    letter-spacing: 1px; /* Slight letter spacing for elegance */
+    
+    /* Text shadow for depth */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2), 0 0 25px rgba(0, 0, 0, 0.1);
+    
+    /* Gradient text for a dynamic effect */
+    background: linear-gradient(to right, #007bff, #00bfff);
+    -webkit-background-clip: text; /* Makes the gradient apply to the text only */
+    color: transparent; /* Removes solid color to reveal gradient */
+    
+    /* Optional: Add a soft underline effect */
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 4px; /* Adds space between the text and underline */
+}
+
+/* Styling the list inside the popup */
+.manual-popup ul {
+    list-style-type: none; /* Removes default bullets */
+    padding: 0;
+    margin: 0;
+    background-color: #f4f4f4; /* Light gray background for the entire list */
+    border-radius: 6px; /* Smaller rounded corners for the list container */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for a subtle elevation effect */
+}
+
+/* Styling each list item */
+.manual-popup ul li {
+    margin: 6px 0; /* Reduced margin for smaller spacing between items */
+    font-size: 0.85em; /* Smaller font size for more compactness */
+    color: #333; /* Dark text color for contrast */
+    font-family: 'Arial', sans-serif; /* Clear, easy-to-read font */
+    padding: 6px; /* Even smaller padding for a more compact feel */
+    background-color: #fff; /* White background for the list items to stand out */
+    border-radius: 4px; /* Smaller rounded corners for a sleeker look */
+    line-height: 1.4; /* Reduced line height to make it more compact */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for hover effect */
+}
+
+/* Hover effect for the list items */
+.manual-popup ul li:hover {
+    background-color: #e0f7ff; /* Light blue background on hover for focus */
+    transform: scale(1.03); /* Slightly stronger zoom effect on hover for interactivity */
+    cursor: pointer; /* Indicates clickable items */
+}
+
+/* Optional: Adding a subtle border on hover to enhance the focus */
+.manual-popup ul li:hover {
+    border: 1px solid #007bff; /* Blue border on hover for better focus */
+}
+
+/* Hover effect to show the popup when hovering over the icon */
+.manual-icon:hover + .manual-popup,
+.manual-popup:hover {
+    display: block;
+    opacity: 1;
+}
+
+/* Hover effect for the manual icon */
+.manual-icon:hover img {
+    transform: scale(1.1); /* Slightly smaller hover zoom effect */
+}
+
+/*DTCs Manual Button*/
+.dtc-manual-icon {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 10;
+    cursor: pointer;
+    font-size: 30px;
+    color: #007bff;
+    background-color: white;
+    border-radius: 50%;
+    padding: 15px; /* Slightly larger padding for a better effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s infinite; /* Add a pulsing animation */
+}
+
+.dtc-manual-icon:hover {
+    transform: scale(1.2) rotate(15deg); /* Slightly enlarge and rotate */
+    background-color: #e0f7ff; /* Softer blue background on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+}
+
+/* Add a subtle pulse animation */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1); /* Normal size */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: scale(1.1); /* Slightly larger */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+    }
+}
+
+        .dtc-manual-popup {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            width: 400px;
+            height: 300px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .dtc-manual-popup iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .dtc-popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #333;
+            background-color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .dtc-popup-close:hover {
+            background-color: #f0f0f0;
+        }
+
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+         <div class="header">
+            <h1>OBD2 Vehicle Scanner</h1>
+        </div>
+        <button id="connectButton">Connect to Arduino</button>
+        <div class="button-container">
+            <button id="liveDataButton">Start Live Data</button>
+            <button id="stopButton">Stop</button>
+            <button id="dtcButton">Read DTCs</button>
+            <button id="clearButton">Clear DTCs</button>
+            <button id="terminateButton">Terminate Connection</button>
+            <button class="refresh-icon" id="refreshButton"><i class="fas fa-sync-alt"></i></button>
+        </div>
+        <pre id="output"></pre>
+        <input type="text" id="commandInput" placeholder="Type a command and press Enter...">
+    </div>
+
+    <!-- Instructions Icon in the top-left corner -->
+<div class="manual-icon" id="manualIcon">
+    <img src="https://cdn-icons-png.flaticon.com/512/7610/7610948.png" alt="Manual Icon" style="width: 30px; height: 30px;"/>
+</div>
+
+<!-- Popup for Instructions -->
+<div class="manual-popup" id="manualPopup">
+    <h4>Instructions</h4>
+    <ul>
+    <li><strong>Module Selection:</strong>
+        <ul>
+            <li>Type <code>ECM</code>, <code>TCM</code>, or <code>ABS</code> to connect to the respective module (case-insensitive).</li>
+        </ul>
+    </li>
+
+    <li><strong>Data Collection:</strong>
+        <ul>
+            <li>Click <code>'start'</code> to begin reading live data from the connected module.</li>
+            <li>Click <code>'stop'</code> to stop reading live data.</li>
+        </ul>
+    </li>
+
+    <li><strong>Diagnostic Trouble Codes (DTCs):</strong>
+        <ul>
+            <li>Type <code>'dtc'</code> to read available Diagnostic Trouble Codes (DTCs).</li>
+            <li>After reading DTCs, you can select the <strong>Preferred Mode</strong> to filter your results:
+                <ul>
+                    <li><code>'03'</code> for Mode 03 (Stored DTCs).</li>
+                    <li><code>'07'</code> for Mode 07 (Pending DTCs).</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+
+    <li><strong>Clear DTCs and Disable MIL:</strong>
+        <ul>
+            <li>Type <code>'clear'</code> to clear the DTCs and disable the MIL (Malfunction Indicator Light).</li>
+        </ul>
+    </li>
+</ul>
+
+</div>
+
+
+     <!-- Info Icon and Popup -->
+        <div class="info-icon">
+            <i class="fas fa-info-circle"></i>
+        </div>
+        <div class="info-popup">
+            <style>
+    .bold-text {
+        font-weight: bold;
+    }
+</style>
+
+<p class="bold-text">a Vehicle diagnostic device and interface designed for the ISO 15765-4</p>
+            <h4>ECU Simulator's Technical Features:</h4>
+            <ul class="feature-list">
+                <li> Compatible with ISO 15765-4</li>
+                <li> 2.7 to 6V operating range</li>
+                <li> MIL LED output</li>
+                <li> 11/29 bit ident selectable</li>
+                <li> Variable PIDs</li>
+                <li> ECM, TCM, and ABS ECU Address range</li>
+                <li> 250/500 Kbaud selectable</li>
+            </ul>
+        </div>
+    </div>
+
+
+
+
+     <!-- DTC Manual Icon -->
+    <div class="dtc-manual-icon" id="dtcManualIcon">
+        <i class="fas fa-book"></i>
+    </div>
+
+    <!-- DTC Manual Popup -->
+    <div class="dtc-manual-popup" id="dtcManualPopup">
+        <button class="dtc-popup-close" id="closePopup">&times;</button>
+        <iframe src="C:\Users\simos\Documents\ΣΧΟΛΗ\Εκπόνηση Διπλωματικής Εργασίας\Application\DTCs.html" title="DTC Errors"></iframe>
+    </div>
+
+
+
+
+     <!-- PDF Icon -->
+    <div class="pdf-icon" id="pdfIcon">
+        <i class="fas fa-file-pdf"></i>
+    </div>
+
+    <!-- PDF Viewer -->
+    <div class="pdf-viewer" id="pdfViewer">
+        <iframe src="C:\Users\simos\Documents\ΣΧΟΛΗ\Εκπόνηση Διπλωματικής Εργασίας\oe91c1610_OZEN_ELEKTRONIK_guide.pdf" frameborder="0"></iframe>
+    </div>
+
+    <script>
+        // Toggle PDF viewer
+        const pdfIcon = document.getElementById('pdfIcon');
+        const pdfViewer = document.getElementById('pdfViewer');
+
+        pdfIcon.addEventListener('click', function() {
+            if (pdfViewer.style.display === 'none' || pdfViewer.style.display === '') {
+                pdfViewer.style.display = 'block';
+            } else {
+                pdfViewer.style.display = 'none';
+            }
+        });
+    </script>
+
+
+    <!-- Hardware Section -->
+<div class="hardware-section">
+    <h2>Hardware Used in This Project</h2>
+
+    <div class="hardware-item">
+        <img src="https://store.arduino.cc/cdn/shop/files/A000066_01.iso_1000x750.jpg?v=1727098250" alt="Arduino Uno">
+        <h3>Arduino Uno</h3>
+        <p>Arduino Uno is a microcontroller board based on the ATmega328P. It has 14 digital input/output pins </p>
+        <a href="https://store.arduino.cc/en-gr/products/arduino-uno-rev3?srsltid=AfmBOor2GA5sJa2WIs7Zr3q-z4SnA2PJcWoXPd5QE-CvJ1wigNTyRIJr" target="_blank">Purchase item</a>
+    </div>
+
+    <div class="hardware-item">
+        <img src="https://store.arduino.cc/cdn/shop/files/M000006_01.iso_1920x1521.jpg?v=1727098217" alt="USB 2.0 Cable Type A/B">
+        <h3>USB 2.0 Cable Type A/B</h3>
+        <p>Use it to connect Arduino Uno, Arduino Mega 2560 or any board with the USB female A port of your computer to power your hardware.</p>
+        <a href="https://store.arduino.cc/products/usb-2-0-cable-type-a-b?_pos=3&_psq=M000006+OR+T050000+OR+TPX00018&_ss=e&_v=1.0" target="_blank">Purchase item</a>
+    </div>
+
+
+    <div class="hardware-item">
+        <img src="https://cdn.sparkfun.com/assets/parts/1/0/4/6/6/13262-04.jpg" alt="CAN Bus Shield">
+        <h3>Sparkfun's CAN Bus Shield</h3>
+        <p>This shield enables communication with vehicles' ECUs allowing data exchange for automotive diagnostics, real-time monitoring and etc.</p>
+        <a href="https://www.sparkfun.com/products/13262" target="_blank">Purchase item</a>
+    </div>
+
+    <div class="hardware-item">
+        <img src="https://www.hellasdigital.gr/images/detailed/30/ezgif.com-gif-maker-removebg-preview_4s8t-ug.jpg" alt="OBDII to DB9 Cable">
+        <h3>OBDII to DB9 Cable</h3>
+        <p>This is an OBD-II to DB9 cable, which allows you to access your car’s OBDII connector..</p>
+        <a href="https://www.hellasdigital.gr/smartliving/cables-adapters/db9-serial-rs232-obd2-cable-fit0429/?sl=en" target="_blank">Purchase item</a>
+    </div>
+
+    <div class="hardware-item">
+        <img src="https://www.ozenelektronik.com.tr/images/products/obd-cozumleri/canbus-obd-ecu-simulator/1-large.jpg" alt="OBD Simulator by Ozen Elektroniks">
+        <h3>CANBUS OBD ECU Simulator mOByDic1610</h3>
+        <p>This OBDII simulator allows you to emulate the behavior of a real vehicle’s ECU,
+        it includes multiple ECUs making it useful for testing and development of your OBDII diagnostic tools.It follows the ISO 15765-4 protocol
+        </p>
+        <a href="https://www.ozenelektronik.com.tr/canbus-obd-ecu-simulator-p.html" target="_blank">Purchase item</a>
+    </div>
+
+    <!-- New Hardware Item for 12V to DC Adapter -->
+    <div class="hardware-item">
+        <img src="https://m.media-amazon.com/images/I/71w+eCvn2kL._AC_SL1500_.jpg" alt="12V to DC Adapter">
+        <h3>DC to AC Adapter</h3>
+        <p>This adapter is used to convert the vehicle’s 12V power source to the required DC voltage to power the ECM simulator and the Arduino board if needed.</p>
+        <a href="https://technogroup.shop/products/sunfone-acsd-15-12v-2-0a-power-adapter-1166353?srsltid=AfmBOoqn19YSfykQ8KRYsEmw4j5Cuubmekx6o8dRJ8xC8vHwUz7C9p5L" target="_blank">Purchase item</a>
+    </div>
+
+</div>
+
+
+     <!-- Copyright Section -->
+    <div class="footer">
+        <span class="icon">&#169;</span>
+        <span class="name">Symeon Petmezas</span>
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let port;
+        let reader;
+        let reading = false;
+        const output = document.getElementById('output');
+        const connectButton = document.getElementById('connectButton');
+        const liveDataButton = document.getElementById('liveDataButton');
+        const stopButton = document.getElementById('stopButton');
+        const dtcButton = document.getElementById('dtcButton');
+        const clearButton = document.getElementById('clearButton');
+        const terminateButton = document.getElementById('terminateButton');
+        const refreshButton = document.getElementById('refreshButton');
+        const commandInput = document.getElementById('commandInput');
+        let printedHelloWorld = false; 
+
+     
+
+
+
+
+
+        // Function to connect to Arduino
+        async function connect() {
+            try {
+                port = await navigator.serial.requestPort();
+                await port.open({ baudRate: 9600 });
+                output.textContent += "Connected to Arduino\n";
+                reader = port.readable.getReader();
+                reading = true;
+                readLoop();
+            } catch (error) {
+                output.textContent += "Error connecting to Arduino: " + error + "\n";
+            }
+        }
+
+        // Function to read data continuously and update charts
+      // Function to read data continuously and update charts
+        async function readLoop() {
+            console.log("Starting the readLoop function...");  // Debugging output at the beginning
+            try {
+                while (reading) {
+                    const { value, done } = await reader.read();
+                    if (done) {
+                        reader.releaseLock();
+                        break;
+                    }
+
+                    const text = new TextDecoder('utf-8').decode(value);
+                    console.log("Received data:", text);  // Debugging output
+
+                    output.textContent += text;
+                    output.scrollTop = output.scrollHeight;
+
+
+
+
+
+
+                    // // Parse incoming data and update charts
+                    // const lines = text.split('\n');
+                    // for (const line of lines) {
+                    //     const trimmedLine = line.trim();
+                    //     console.log("Trimmed Line:", trimmedLine);  // Debugging output
+
+                    //     // Handle the "Engine RPM" format: "Engine RPM = value rpm"
+                    //     if (trimmedLine.startsWith("Engine RPM =")) {
+                    //         const rpmValue = parseFloat(trimmedLine.split('=')[1].trim().split(' ')[0]) || 0;
+                    //         updateChart(chartRPM, rpmValue);
+                    //         console.log("Current RPM:", rpmValue);  // Debugging output
+                    //     }
+
+                    //     // Handle JSON-like format: {"rpm": value}
+                    //     try {
+                    //         const jsonData = JSON.parse(trimmedLine);
+                    //         if (jsonData.rpm !== undefined) {
+                    //             updateChart(chartRPM, parseInt(jsonData.rpm) || 0);
+                    //             console.log("Current RPM from JSON:", jsonData.rpm);  // Debugging output
+                    //         }
+                    //     } catch (e) {
+                    //         // Ignore JSON parsing errors
+                    //         console.error("JSON parsing error:", e);  // Debugging output
+                    //     }
+                    // }
+                    // Reset the flag after a cycle completes to print it again on the next read cycle
+                }
+            } catch (error) {
+                console.error("Error in reading loop:", error);
+            }
+        }
+
+
+
+
+        // Function to send commands
+        async function sendCommand(command) {
+            if (!port) return;
+            const writer = port.writable.getWriter();
+            await writer.write(new TextEncoder().encode(command + '\n'));
+            writer.releaseLock();
+            output.textContent += "Sent command: " + command + "\n";
+        }
+
+        // Terminate connection
+        async function terminateConnection() {
+            reading = false;
+            if (reader) {
+                await reader.cancel();
+                reader.releaseLock();
+            }
+            if (port) {
+                await port.close();
+                output.textContent += "Connection terminated\n";
+            }
+        }
+
+        // Refresh page
+        function refreshPage() {
+            location.reload();
+        }
+
+
+
+        // Function to update the RPM chart with the incoming RPM value
+
+
+
+
+        // Event listeners for buttons
+        connectButton.addEventListener('click', connect);
+        liveDataButton.addEventListener('click', () => sendCommand('start'));
+        stopButton.addEventListener('click', () => sendCommand('stop'));
+        dtcButton.addEventListener('click', () => sendCommand('dtc'));
+        clearButton.addEventListener('click', () => sendCommand('clear'));
+        terminateButton.addEventListener('click', terminateConnection);
+        refreshButton.addEventListener('click', refreshPage);
+
+        // Event listener for the input field
+        commandInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const command = commandInput.value.trim();
+                if (command) {
+                    sendCommand(command);
+                    commandInput.value = '';
+                }
+            }
+        });
+// Get the icon and popup elements
+const manualIcon = document.getElementById('manualIcon');
+const manualPopup = document.getElementById('manualPopup');
+
+// Show the popup when the icon is hovered
+manualIcon.addEventListener('mouseenter', () => {
+    manualPopup.style.display = 'block';
+});
+
+// Hide the popup when the mouse leaves the icon or the popup
+manualIcon.addEventListener('mouseleave', () => {
+    setTimeout(() => {
+        if (!manualPopup.matches(':hover')) {
+            manualPopup.style.display = 'none';
+        }
+    }, 100); // Delay to allow the mouse to hover over the popup before disappearing
+});
+
+manualPopup.addEventListener('mouseleave', () => {
+    manualPopup.style.display = 'none';
+});
+
+
+
+        //DTCs manual motions 
+    
+const dtcManualIcon = document.getElementById('dtcManualIcon');
+        const dtcManualPopup = document.getElementById('dtcManualPopup');
+        const closePopup = document.getElementById('closePopup');
+
+        // Show the popup when the icon is clicked
+        dtcManualIcon.addEventListener('click', () => {
+            dtcManualPopup.style.display = 'block';
+        });
+
+        // Hide the popup when the close button is clicked
+        closePopup.addEventListener('click', () => {
+            dtcManualPopup.style.display = 'none';
+        });
+
+
+
+    </script>
+</body>
+</html>

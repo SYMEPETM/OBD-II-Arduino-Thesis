@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTC Errors List</title>
+    <style>
+        /* General Styling */
+       body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #6A9C89; /* Solid color background */
+            color: #fff;
+            min-height: 100vh;
+        }
+
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2.5rem;
+            text-align: center;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        /* Search Container */
+        .search-container {
+            margin: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            animation: slideIn 1s ease-out;
+        }
+
+        .search-container input[type="text"] {
+            width: 300px;
+            padding: 12px;
+            border: 2px solid #16423C;
+            border-radius: 25px;
+            outline: none;
+            font-size: 1rem;
+            display: none; /* Initially hidden */
+            transition: all 0.4s ease;
+        }
+
+        .search-container input[type="text"].active {
+            display: block; /* Show input when active */
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .search-container .search-icon {
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #fff;
+            background-color: #007BFF;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .search-container .search-icon:hover {
+            transform: scale(1.2);
+            background-color: #0056b3;
+        }
+
+        /* DTC List Container */
+        .dtc-list {
+            margin-top: 20px;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            max-height: 400px;
+            background: rgba(255, 255, 255, 0.9);
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .dtc-list ul {
+            list-style: none;
+            margin: 0;
+            padding: 15px;
+        }
+
+        .dtc-list ul li {
+            padding: 12px 15px;
+            margin: 5px 0;
+            background-color: #f4f4f4;
+            color: #333;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .dtc-list ul li:hover {
+            background-color: #0A6847;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .dtc-list ul li.hidden {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Diagnostic Trouble Codes (DTCs)</h1>
+
+    <div class="search-container">
+        <input type="text" id="search-bar" placeholder="Search DTCs...">
+        <span class="search-icon">&#128269;</span>
+    </div>
+
+    <div class="dtc-list">
+        <ul id="dtc-list">
+            <!-- Example DTC codes -->
+            <li>P0100 - Mass or Volume Air Flow Circuit</li>
+            <li>P0101 - Mass or Volume Air Flow "A" Circuit Range/Performance Problem</li>
+            <li>P0102 - Mass or Volume Air Flow Circuit Low</li>
+            <li>P0107 - Manifold Absolute Pressure (MAP)/Barometric Pressure (BARO) Sensor Low</li>
+            <li>P0200 - Injector Circuit Malfunction</li>
+            <li>P0207 - Poor Performance on a Fuel Injector on Cylinder 7</li>
+            <li>P0300 - Random/Multiple Cylinder Misfire Detected</li>
+            <li>P0400 - Exhaust Gas Recirculation Flow Malfunction</li>
+            <li>P0500 - Vehicle Speed Sensor Malfunction</li>
+            <li>P0600 - Serial Communication Link Malfunction</li>
+            <li>P0700 - Transmission Control System Malfunction</li>
+            <li>U0100 - Lost Communication with ECM/PCM</li>
+            <li>B0200 - Door Module Circuit Malfunction</li>
+            <li>B2245 - Passenger Rear Door Ajar Circuit Open</li>
+            <li>C0300 - Rear Drive Axle Malfunction</li>
+            <li>P0113 - Intake Air Temperature Sensor 1 Circuit High</li>
+            <li>P0130 - O2 Sensor Circuit Malfunction (Bank 1, Sensor 1)</li>
+            <li>P0141 - O2 Sensor Heater Circuit Malfunction (Bank 1, Sensor 2)</li>
+            <li>P0171 - System Too Lean (Bank 1)</li>
+            <li>P0172 - System Too Rich (Bank 1)</li>
+            <li>P0219 - Engine Overspeed Condition</li>
+            <li>P0301 - Cylinder 1 Misfire Detected</li>
+            <li>P0420 - Catalyst System Efficiency Below Threshold (Bank 1)</li>
+            <li>P0455 - Evaporative Emission System Leak Detected (Large Leak)</li>
+            <li>P0505 - Idle Air Control System Malfunction</li>
+            <li>P0562 - System Voltage Low</li>
+            <li>P0620 - Generator Control Circuit Malfunction</li>
+            <li>P0740 - Torque Converter Clutch Circuit Malfunction</li>
+            <li>U0121 - Lost Communication with Anti-Lock Brake System (ABS) Control Module</li>
+            <li>U1000 - Class 2 Communication Malfunction</li>
+            <li>U1600 - Electronic key-immobiliser system fault </li>
+            <li>B1261 - Air Mix Door Driver Motor Circuit Short to Battery</li>
+            <li>B1821 - Front Seat Belt Sensor Circuit Low</li>
+            <li>B2103 - Driver Door Unlock Circuit Short to Ground</li>
+            <li>C0040 - Right Front Wheel Speed Sensor Circuit Malfunction</li>
+            <li>C0121 - ABS/TCS Power Relay Circuit Malfunction</li>
+            <li>C0561 - ABS Disabled for Communication Error</li>
+
+
+        </ul>
+    </div>
+
+    <script>
+        const searchIcon = document.querySelector('.search-icon');
+        const searchBar = document.querySelector('#search-bar');
+        const dtcList = document.querySelectorAll('#dtc-list li');
+
+        // Show/hide search bar when the search icon is clicked
+        searchIcon.addEventListener('click', () => {
+            searchBar.classList.toggle('active');
+            searchBar.focus();
+        });
+
+        // Filter DTC list as the user types
+        searchBar.addEventListener('input', () => {
+            const searchTerm = searchBar.value.toLowerCase();
+            dtcList.forEach(dtc => {
+                if (dtc.textContent.toLowerCase().includes(searchTerm)) {
+                    dtc.classList.remove('hidden');
+                } else {
+                    dtc.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
