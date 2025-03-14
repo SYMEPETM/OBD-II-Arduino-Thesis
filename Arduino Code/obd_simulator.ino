@@ -1,7 +1,7 @@
 #include <CAN.h> // the OBD2 library depends on the CAN library
 #include <OBD2.h>
 
-
+bool running = false; // Variable to control data printing
 
 void setup() {
   Serial.begin(9600); // Initializes serial communication with a baud rate of 9600
